@@ -24,7 +24,7 @@ public class UserService {
         if (checkRequestBody(username, password))
             throw new SomethingIsEmptyException();
 
-        FoxBinUser foxBinUser = mUserRepository.getFoxBinUserByUsername(username);
+        FoxBinUser foxBinUser = mUserRepository.foxBinUserByUsername(username);
         if (foxBinUser != null)
             throw new UsernameTakenException();
 
@@ -38,7 +38,7 @@ public class UserService {
         if (checkRequestBody(username, password))
             throw new SomethingIsEmptyException();
 
-        FoxBinUser foxBinUser = mUserRepository.getFoxBinUserByUsername(username);
+        FoxBinUser foxBinUser = mUserRepository.foxBinUserByUsername(username);
         if (foxBinUser == null || !foxBinUser.getPassword().equals(CryptUtils.toMd5(password)))
             throw new InvalidLoginOrPasswordException();
 

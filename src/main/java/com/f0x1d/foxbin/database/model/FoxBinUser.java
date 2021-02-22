@@ -3,9 +3,11 @@ package com.f0x1d.foxbin.database.model;
 import io.objectbox.annotation.Backlink;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Unique;
 import io.objectbox.relation.ToMany;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class FoxBinUser {
@@ -13,6 +15,7 @@ public class FoxBinUser {
     @Id
     private long id;
 
+    @Unique
     private String username;
     private String password;
 
@@ -79,5 +82,18 @@ public class FoxBinUser {
 
     public void setNotes(ToMany<FoxBinNote> notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FoxBinUser that = (FoxBinUser) o;
+        return Objects.equals(username, that.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, notes, accessTokens);
     }
 }

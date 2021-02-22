@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepository {
 
-    public FoxBinUser getFoxBinUserByUsername(String username) {
+    public FoxBinUser foxBinUserByUsername(String username) {
         return ObjectBox.get()
                 .boxFor(FoxBinUser.class)
                 .query()

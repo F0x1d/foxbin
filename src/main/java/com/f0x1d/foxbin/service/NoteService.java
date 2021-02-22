@@ -2,6 +2,8 @@ package com.f0x1d.foxbin.service;
 
 import com.f0x1d.foxbin.database.model.FoxBinNote;
 import com.f0x1d.foxbin.database.model.FoxBinUser;
+import com.f0x1d.foxbin.model.response.note.usernote.UserNote;
+import com.f0x1d.foxbin.model.response.note.usernote.UserNoteWithContent;
 import com.f0x1d.foxbin.repository.NoteRepository;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.EmptyContentException;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.NoSuchNoteException;
@@ -26,26 +28,51 @@ public class NoteService {
     }
 
     public String getRawNote(String slug) {
-        FoxBinNote foxBinNote = mNoteRepository.noteFromSlug(slug);
-        if (foxBinNote == null)
-            throw new NoSuchNoteException();
+        return noteFromSlug(slug).getContent();
+    }
 
-        return foxBinNote.getContent();
+    public UserNoteWithContent getNote(String slug, String accessToken) {
+        FoxBinNote foxBinNote = noteFromSlug(slug);
+        FoxBinUser foxBinUser = userFromAccessToken(accessToken);
+
+        boolean editable = false;
+        if (foxBinUser != null && foxBinNote.getUser().getTarget().equals(foxBinUser))
+            editable = true;
+
+        return UserNoteWithContent.create(
+                foxBinNote.getContent(),
+                foxBinNote.getSlug(),
+                foxBinNote.getDate(),
+                editable
+        );
     }
 
     public String createNote(String content, String slug, String accessToken) {
         if (content.isEmpty())
             throw new EmptyContentException();
 
+        FoxBinUser user = userFromAccessToken(accessToken);
+
+        slug = generateSlug(slug);
+        mNoteRepository.createNote(content, slug, user);
+
+        return slug;
+    }
+
+    private FoxBinUser userFromAccessToken(String accessToken) {
         FoxBinUser user = null;
         if (accessToken != null)
             user = mNoteRepository.userFromAccessToken(accessToken);
 
-        slug = generateSlug(slug);
+        return user;
+    }
 
-        mNoteRepository.createNote(content, slug, user);
+    private FoxBinNote noteFromSlug(String slug) {
+        FoxBinNote foxBinNote = mNoteRepository.noteFromSlug(slug);
+        if (foxBinNote == null)
+            throw new NoSuchNoteException();
 
-        return slug;
+        return foxBinNote;
     }
 
     private String generateSlug(String slug) {

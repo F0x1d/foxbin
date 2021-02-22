@@ -1,4 +1,4 @@
-package com.f0x1d.foxbin.model.response.note;
+package com.f0x1d.foxbin.model.response.note.usernote;
 
 public class UserNote {
 

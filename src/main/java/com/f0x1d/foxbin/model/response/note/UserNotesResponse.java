@@ -2,6 +2,7 @@ package com.f0x1d.foxbin.model.response.note;
 
 import com.f0x1d.foxbin.database.model.FoxBinNote;
 import com.f0x1d.foxbin.model.response.base.Response;
+import com.f0x1d.foxbin.model.response.note.usernote.UserNote;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;

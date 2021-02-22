@@ -1,6 +1,6 @@
 package com.f0x1d.foxbin.database.model;
 
-import com.f0x1d.foxbin.model.response.note.UserNote;
+import com.f0x1d.foxbin.model.response.note.usernote.UserNote;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.relation.ToOne;
