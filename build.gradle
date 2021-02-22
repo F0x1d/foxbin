@@ -1,0 +1,33 @@
+buildscript {
+	ext.objectboxVersion = '2.8.1'
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.4.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+apply plugin: 'io.objectbox'
+
+group = 'com.f0x1d'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}
