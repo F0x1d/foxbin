@@ -1,6 +1,6 @@
 package com.f0x1d.foxbin.model.requestbody;
 
-public class CreateNoteRequestBody {
+public class CreateOrEditNoteRequestBody {
 
     private String content;
     private String slug;

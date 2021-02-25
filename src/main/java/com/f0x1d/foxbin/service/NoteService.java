@@ -8,6 +8,7 @@ import com.f0x1d.foxbin.repository.NoteRepository;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.EmptyContentException;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.NoSuchNoteException;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.SlugTakenException;
+import com.f0x1d.foxbin.restcontroller.note.exceptions.UneditableNoteException;
 import com.f0x1d.foxbin.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,21 @@ public class NoteService {
 
         slug = generateSlug(slug);
         mNoteRepository.createNote(content, slug, user);
+
+        return slug;
+    }
+
+    public String editNote(String content, String slug, String accessToken) {
+        if (content.isEmpty())
+            throw new EmptyContentException();
+
+        FoxBinNote foxBinNote = noteFromSlug(slug);
+        FoxBinUser foxBinUser = userFromAccessToken(accessToken);
+
+        if (foxBinUser == null || !foxBinNote.getUser().getTarget().equals(foxBinUser))
+            throw new UneditableNoteException();
+
+        mNoteRepository.editNote(content, foxBinNote);
 
         return slug;
     }

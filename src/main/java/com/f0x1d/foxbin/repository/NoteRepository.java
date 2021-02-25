@@ -19,6 +19,14 @@ public class NoteRepository {
                 ));
     }
 
+    public void editNote(String content, FoxBinNote foxBinNote) {
+        foxBinNote.setContent(content);
+
+        ObjectBox.get()
+                .boxFor(FoxBinNote.class)
+                .put(foxBinNote);
+    }
+
     public List<FoxBinNote> userNotes(String accessToken) {
         return userFromAccessToken(accessToken)
                 .getNotes();

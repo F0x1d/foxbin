@@ -3,11 +3,11 @@ package com.f0x1d.foxbin.model.response.note;
 import com.f0x1d.foxbin.model.response.base.Response;
 import org.springframework.http.HttpStatus;
 
-public class CreatedNoteResponse extends Response {
+public class CreatedOrEditedNoteResponse extends Response {
 
     public String slug;
 
-    public CreatedNoteResponse(String slug) {
+    public CreatedOrEditedNoteResponse(String slug) {
         super();
         this.slug = slug;
     }
