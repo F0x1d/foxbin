@@ -1,5 +1,5 @@
 buildscript {
-	ext.objectboxVersion = '2.8.1'
+	ext.objectboxVersion = '2.9.0'
 	repositories {
 		jcenter()
 	}
@@ -24,6 +24,8 @@ repositories {
 }
 
 dependencies {
+	implementation "io.objectbox:objectbox-linux:$objectboxVersion"
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

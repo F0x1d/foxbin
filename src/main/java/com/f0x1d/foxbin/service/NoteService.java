@@ -49,7 +49,7 @@ public class NoteService {
     }
 
     public String createNote(String content, String slug, String accessToken) {
-        if (content.isEmpty())
+        if (content.isEmpty() || (slug != null && slug.isEmpty()))
             throw new EmptyContentException();
 
         FoxBinUser user = userFromAccessToken(accessToken);

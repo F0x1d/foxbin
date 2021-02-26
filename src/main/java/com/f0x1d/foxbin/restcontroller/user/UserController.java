@@ -21,7 +21,7 @@ public class UserController {
         ).getToken());
     }
 
-    @GetMapping("/users/login")
+    @PostMapping("/users/login")
     public Response login(@RequestBody FoxBinUserRequestBody foxBinUserRequestBody) {
         return new SuccessfulLoginResponse(mUserService.login(
                 foxBinUserRequestBody.getUsername(),
