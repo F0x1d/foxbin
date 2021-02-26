@@ -9,13 +9,15 @@ import java.util.List;
 @Repository
 public class NoteRepository {
 
+    private FoxBinUser mRootUser;
+
     public void createNote(String content, String slug, FoxBinUser user) {
         ObjectBox.get()
                 .boxFor(FoxBinNote.class)
                 .put(FoxBinNote.createNote(
                         content,
                         slug,
-                        user
+                        user == null ? rootUser() : user
                 ));
     }
 
@@ -50,5 +52,16 @@ public class NoteRepository {
                 .equal(FoxBinNote_.slug, slug)
                 .build()
                 .findFirst();
+    }
+
+    private FoxBinUser rootUser() {
+        if (mRootUser == null) {
+            return mRootUser = ObjectBox.get()
+                    .boxFor(FoxBinUser.class)
+                    .query()
+                    .equal(FoxBinUser_.username, "root")
+                    .build()
+                    .findFirst();
+        } else return mRootUser;
     }
 }

@@ -6,6 +6,7 @@ import com.f0x1d.foxbin.database.model.AccessToken_;
 import com.f0x1d.foxbin.database.model.FoxBinUser;
 import com.f0x1d.foxbin.database.model.FoxBinUser_;
 import com.f0x1d.foxbin.utils.CryptUtils;
+import io.objectbox.Box;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -45,5 +46,17 @@ public class UserRepository {
                         CryptUtils.toMd5(password),
                         accessToken
                 ));
+    }
+
+    public void createRootUser() {
+        Box<FoxBinUser> foxBinUserBox = ObjectBox.get().boxFor(FoxBinUser.class);
+        if (foxBinUserBox
+                .query()
+                .equal(FoxBinUser_.username, "root")
+                .build()
+                .findFirst() != null
+        ) return;
+
+        foxBinUserBox.put(FoxBinUser.create("root", "root"));
     }
 }

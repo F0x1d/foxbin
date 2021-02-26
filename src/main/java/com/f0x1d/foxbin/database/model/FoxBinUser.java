@@ -33,6 +33,14 @@ public class FoxBinUser {
         return foxBinUser;
     }
 
+    public static FoxBinUser create(String username, String password) {
+        FoxBinUser foxBinUser = new FoxBinUser();
+        foxBinUser.setUsername(username);
+        foxBinUser.setPassword(password);
+
+        return foxBinUser;
+    }
+
     public FoxBinUser() {
     }
 
