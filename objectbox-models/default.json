@@ -1,0 +1,108 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:9208188918305620411",
+      "lastPropertyId": "3:7224847503287963779",
+      "name": "AccessToken",
+      "properties": [
+        {
+          "id": "1:129026657296797457",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5828287102623005495",
+          "name": "token",
+          "type": 9
+        },
+        {
+          "id": "3:7224847503287963779",
+          "name": "userId",
+          "indexId": "1:1913705812953297460",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "FoxBinUser"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:1024651127579409836",
+      "lastPropertyId": "5:8037546159317555646",
+      "name": "FoxBinNote",
+      "properties": [
+        {
+          "id": "1:9023399619605829861",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1777427825255231773",
+          "name": "slug",
+          "type": 9
+        },
+        {
+          "id": "3:3165337676631911061",
+          "name": "content",
+          "type": 9
+        },
+        {
+          "id": "4:9062431574404648048",
+          "name": "date",
+          "type": 10
+        },
+        {
+          "id": "5:8037546159317555646",
+          "name": "userId",
+          "indexId": "2:1413074217106472388",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "FoxBinUser"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:6626819632000163839",
+      "lastPropertyId": "3:3056149441930314508",
+      "name": "FoxBinUser",
+      "properties": [
+        {
+          "id": "1:5818190019808036954",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:634948912320253186",
+          "name": "username",
+          "indexId": "3:1061370323033226878",
+          "type": 9,
+          "flags": 2080
+        },
+        {
+          "id": "3:3056149441930314508",
+          "name": "password",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "3:6626819632000163839",
+  "lastIndexId": "3:1061370323033226878",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
