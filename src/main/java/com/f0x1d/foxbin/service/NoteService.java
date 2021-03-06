@@ -5,15 +5,13 @@ import com.f0x1d.foxbin.database.model.FoxBinUser;
 import com.f0x1d.foxbin.model.response.note.usernote.UserNote;
 import com.f0x1d.foxbin.model.response.note.usernote.UserNoteWithContent;
 import com.f0x1d.foxbin.repository.NoteRepository;
-import com.f0x1d.foxbin.restcontroller.note.exceptions.EmptyContentException;
-import com.f0x1d.foxbin.restcontroller.note.exceptions.NoSuchNoteException;
-import com.f0x1d.foxbin.restcontroller.note.exceptions.SlugTakenException;
-import com.f0x1d.foxbin.restcontroller.note.exceptions.UneditableNoteException;
+import com.f0x1d.foxbin.restcontroller.note.exceptions.*;
 import com.f0x1d.foxbin.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class NoteService {
@@ -23,6 +21,8 @@ public class NoteService {
 
     @Autowired
     private RandomStringGenerator mRandomStringGenerator;
+
+    private Pattern mSlugPattern = Pattern.compile("[a-zA-Z0-9]{5,64}");
 
     public List<FoxBinNote> userNotes(String accessToken) {
         return mNoteRepository.userNotes(accessToken);
@@ -93,9 +93,12 @@ public class NoteService {
 
     private String generateSlug(String slug) {
         if (slug != null) {
-            if (mNoteRepository.noteFromSlug(slug) == null)
-                return slug;
-            else
+            if (mNoteRepository.noteFromSlug(slug) == null) {
+                if (mSlugPattern.matcher(slug).matches())
+                    return slug;
+
+                throw new IncorrectSlugException();
+            } else
                 throw new SlugTakenException();
         }
 

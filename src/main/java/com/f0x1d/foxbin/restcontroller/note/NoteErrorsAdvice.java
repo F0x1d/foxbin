@@ -1,6 +1,7 @@
 package com.f0x1d.foxbin.restcontroller.note;
 
 import com.f0x1d.foxbin.model.response.ErrorResponse;
+import com.f0x1d.foxbin.restcontroller.note.exceptions.IncorrectSlugException;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.NoSuchNoteException;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.SlugTakenException;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.UneditableNoteException;
@@ -32,5 +33,12 @@ public class NoteErrorsAdvice {
     @ExceptionHandler(UneditableNoteException.class)
     public ErrorResponse uneditableNote(UneditableNoteException uneditableNoteException) {
         return new ErrorResponse(uneditableNoteException.getMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IncorrectSlugException.class)
+    public ErrorResponse incorrectSlug(IncorrectSlugException incorrectSlugException) {
+        return new ErrorResponse(incorrectSlugException.getMessage());
     }
 }
