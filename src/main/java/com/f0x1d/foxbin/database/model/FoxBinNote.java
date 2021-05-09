@@ -41,12 +41,11 @@ public class FoxBinNote {
     public FoxBinNote() {
     }
 
-    public FoxBinNote(long id, String slug, String content, Date date, ToOne<FoxBinUser> user) {
+    public FoxBinNote(long id, String slug, String content, Date date) {
         this.id = id;
         this.slug = slug;
         this.content = content;
         this.date = date;
-        this.user = user;
     }
 
     public long getId() {

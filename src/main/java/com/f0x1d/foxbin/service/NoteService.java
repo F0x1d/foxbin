@@ -2,9 +2,9 @@ package com.f0x1d.foxbin.service;
 
 import com.f0x1d.foxbin.database.model.FoxBinNote;
 import com.f0x1d.foxbin.database.model.FoxBinUser;
-import com.f0x1d.foxbin.model.response.note.usernote.UserNote;
 import com.f0x1d.foxbin.model.response.note.usernote.UserNoteWithContent;
 import com.f0x1d.foxbin.repository.NoteRepository;
+import com.f0x1d.foxbin.repository.UserRepository;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.*;
 import com.f0x1d.foxbin.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,16 @@ public class NoteService {
 
     @Autowired
     private NoteRepository mNoteRepository;
+    @Autowired
+    private UserRepository mUserRepository;
 
     @Autowired
     private RandomStringGenerator mRandomStringGenerator;
 
-    private Pattern mSlugPattern = Pattern.compile("[a-zA-Z0-9]{5,64}");
+    private final Pattern mSlugPattern = Pattern.compile("[a-zA-Z0-9]{5,64}");
 
     public List<FoxBinNote> userNotes(String accessToken) {
-        return mNoteRepository.userNotes(accessToken);
+        return mUserRepository.userFromAccessToken(accessToken).getNotes();
     }
 
     public String getRawNote(String slug) {
@@ -36,9 +38,7 @@ public class NoteService {
         FoxBinNote foxBinNote = noteFromSlug(slug);
         FoxBinUser foxBinUser = userFromAccessToken(accessToken);
 
-        boolean editable = false;
-        if (foxBinUser != null && foxBinNote.getUser().getTarget().equals(foxBinUser))
-            editable = true;
+        boolean editable = foxBinUser != null && foxBinNote.getUser().getTarget().equals(foxBinUser);
 
         return UserNoteWithContent.create(
                 foxBinNote.getContent(),
@@ -78,7 +78,7 @@ public class NoteService {
     private FoxBinUser userFromAccessToken(String accessToken) {
         FoxBinUser user = null;
         if (accessToken != null)
-            user = mNoteRepository.userFromAccessToken(accessToken);
+            user = mUserRepository.userFromAccessToken(accessToken);
 
         return user;
     }

@@ -2,6 +2,7 @@ package com.f0x1d.foxbin.restcontroller.user;
 
 import com.f0x1d.foxbin.model.response.ErrorResponse;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.EmptyContentException;
+import com.f0x1d.foxbin.restcontroller.user.exceptions.InvalidAuthorizationException;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.InvalidLoginOrPasswordException;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.SomethingIsEmptyException;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.UsernameTakenException;
@@ -48,6 +49,13 @@ public class UserErrorsAdvice {
     @ExceptionHandler(EmptyContentException.class)
     public ErrorResponse emptyContent(EmptyContentException emptyContentException) {
         return new ErrorResponse(emptyContentException.getMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidAuthorizationException.class)
+    public ErrorResponse invalidAuthorization(InvalidAuthorizationException invalidAuthorizationException) {
+        return new ErrorResponse(invalidAuthorizationException.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
 }

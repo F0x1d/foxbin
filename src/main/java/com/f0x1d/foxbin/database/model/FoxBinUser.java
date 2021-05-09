@@ -44,12 +44,10 @@ public class FoxBinUser {
     public FoxBinUser() {
     }
 
-    public FoxBinUser(long id, String username, String password, ToMany<AccessToken> accessTokens, ToMany<FoxBinNote> notes) {
+    public FoxBinUser(long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.accessTokens = accessTokens;
-        this.notes = notes;
     }
 
     public long getId() {

@@ -5,7 +5,9 @@ import com.f0x1d.foxbin.model.response.base.Response;
 import com.f0x1d.foxbin.model.response.user.SuccessfulLoginResponse;
 import com.f0x1d.foxbin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {

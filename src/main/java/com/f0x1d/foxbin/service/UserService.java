@@ -6,8 +6,8 @@ import com.f0x1d.foxbin.repository.UserRepository;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.InvalidLoginOrPasswordException;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.SomethingIsEmptyException;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.UsernameTakenException;
-import com.f0x1d.foxbin.utils.RandomStringGenerator;
 import com.f0x1d.foxbin.utils.CryptUtils;
+import com.f0x1d.foxbin.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +39,7 @@ public class UserService {
             throw new SomethingIsEmptyException();
 
         FoxBinUser foxBinUser = mUserRepository.foxBinUserByUsername(username);
-        if (foxBinUser == null || !foxBinUser.getPassword().equals(CryptUtils.toMd5(password)))
+        if (foxBinUser == null || !foxBinUser.getPassword().equals(CryptUtils.toMd5(password)) || username.equals("root"))
             throw new InvalidLoginOrPasswordException();
 
         AccessToken accessToken = new AccessToken(generateToken());

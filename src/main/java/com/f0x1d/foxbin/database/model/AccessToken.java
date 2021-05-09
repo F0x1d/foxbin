@@ -14,13 +14,17 @@ public class AccessToken {
     private String token;
     private ToOne<FoxBinUser> user;
 
-    public AccessToken(long id, String token) {
+    private long lastUsedAt;
+
+    public AccessToken(long id, String token, long lastUsedAt) {
         this.id = id;
         this.token = token;
+        this.lastUsedAt = lastUsedAt;
     }
 
     public AccessToken(String token) {
         this.token = token;
+        this.lastUsedAt = System.currentTimeMillis();
     }
 
     public AccessToken() {
@@ -48,6 +52,19 @@ public class AccessToken {
 
     public void setUser(ToOne<FoxBinUser> user) {
         this.user = user;
+    }
+
+    public long getLastUsedAt() {
+        return lastUsedAt;
+    }
+
+    public void setLastUsedAt(long lastUsedAt) {
+        this.lastUsedAt = lastUsedAt;
+    }
+
+    public AccessToken setLastUsedNow() {
+        this.lastUsedAt = System.currentTimeMillis();
+        return this;
     }
 
     @Override

@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
+import java.util.concurrent.Executors;
+
 @SpringBootApplication
 public class FoxbinApplication {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository mUserRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FoxbinApplication.class, args);
@@ -19,6 +21,21 @@ public class FoxbinApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void createRootUser() {
-		userRepository.createRootUser();
+		mUserRepository.createRootUser();
+	}
+
+	@EventListener(ApplicationReadyEvent.class)
+	public void startTokensChecker() {
+		Executors.newSingleThreadExecutor().execute(() -> {
+			while (true) {
+				mUserRepository.checkTokens();
+
+				try {
+					Thread.sleep(Constants.HALF_DAY_MS);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }

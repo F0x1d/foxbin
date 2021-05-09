@@ -7,7 +7,6 @@ import com.f0x1d.foxbin.model.response.note.UserNoteResponse;
 import com.f0x1d.foxbin.model.response.note.UserNotesResponse;
 import com.f0x1d.foxbin.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

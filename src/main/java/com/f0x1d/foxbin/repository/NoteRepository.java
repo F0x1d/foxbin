@@ -1,10 +1,11 @@
 package com.f0x1d.foxbin.repository;
 
 import com.f0x1d.foxbin.database.ObjectBox;
-import com.f0x1d.foxbin.database.model.*;
+import com.f0x1d.foxbin.database.model.FoxBinNote;
+import com.f0x1d.foxbin.database.model.FoxBinNote_;
+import com.f0x1d.foxbin.database.model.FoxBinUser;
+import com.f0x1d.foxbin.database.model.FoxBinUser_;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class NoteRepository {
@@ -27,22 +28,6 @@ public class NoteRepository {
         ObjectBox.get()
                 .boxFor(FoxBinNote.class)
                 .put(foxBinNote);
-    }
-
-    public List<FoxBinNote> userNotes(String accessToken) {
-        return userFromAccessToken(accessToken)
-                .getNotes();
-    }
-
-    public FoxBinUser userFromAccessToken(String token) {
-        return ObjectBox.get()
-                .boxFor(AccessToken.class)
-                .query()
-                .equal(AccessToken_.token, token)
-                .build()
-                .findFirst()
-                .getUser()
-                .getTarget();
     }
 
     public FoxBinNote noteFromSlug(String slug) {
