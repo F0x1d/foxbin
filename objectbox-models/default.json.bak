@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:9208188918305620411",
-      "lastPropertyId": "3:7224847503287963779",
+      "lastPropertyId": "4:496328135057121350",
       "name": "AccessToken",
       "properties": [
         {
@@ -26,6 +26,12 @@
           "type": 11,
           "flags": 1548,
           "relationTarget": "FoxBinUser"
+        },
+        {
+          "id": "4:496328135057121350",
+          "name": "lastUsedAt",
+          "type": 6,
+          "flags": 4
         }
       ],
       "relations": []

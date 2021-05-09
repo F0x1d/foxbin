@@ -9,6 +9,8 @@ import com.f0x1d.foxbin.database.model.FoxBinUser_;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.InvalidAuthorizationException;
 import com.f0x1d.foxbin.utils.CryptUtils;
 import io.objectbox.Box;
+import io.objectbox.exception.UniqueViolationException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,16 +52,7 @@ public class UserRepository {
         return accessToken.getUser().getTarget();
     }
 
-    public boolean tokenExists(String accessToken) {
-        return ObjectBox.get()
-                .boxFor(AccessToken.class)
-                .query()
-                .equal(AccessToken_.token, accessToken)
-                .build()
-                .findFirst() != null;
-    }
-
-    public void addAccessToken(FoxBinUser foxBinUser, AccessToken accessToken) {
+    public void addAccessToken(FoxBinUser foxBinUser, AccessToken accessToken) throws UniqueViolationException {
         foxBinUser.getAccessTokens().add(accessToken);
 
         ObjectBox.get()
@@ -73,14 +66,14 @@ public class UserRepository {
                 .remove(accessToken);
     }
 
-    public void createFoxBinUser(String username, String password, AccessToken accessToken) {
+    public FoxBinUser createFoxBinUser(String username, String password) throws UniqueViolationException {
+        FoxBinUser foxBinUser = FoxBinUser.create(username, CryptUtils.toMd5(password));
+
         ObjectBox.get()
                 .boxFor(FoxBinUser.class)
-                .put(FoxBinUser.create(
-                        username,
-                        CryptUtils.toMd5(password),
-                        accessToken
-                ));
+                .put(foxBinUser);
+
+        return foxBinUser;
     }
 
     public void createRootUser() {
@@ -95,6 +88,7 @@ public class UserRepository {
         foxBinUserBox.put(FoxBinUser.create("root", "root"));
     }
 
+    @Scheduled(initialDelay = Constants.ONE_MINUTE_MS, fixedRate = Constants.HALF_DAY_MS)
     public void checkTokens() {
         for (FoxBinUser foxBinUser : getAllUsers()) {
             for (AccessToken accessToken : foxBinUser.getAccessTokens()) {

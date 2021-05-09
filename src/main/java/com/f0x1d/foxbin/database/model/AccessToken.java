@@ -2,6 +2,7 @@ package com.f0x1d.foxbin.database.model;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Unique;
 import io.objectbox.relation.ToOne;
 
 import java.util.Objects;
@@ -11,6 +12,7 @@ public class AccessToken {
 
     @Id
     private long id;
+    @Unique
     private String token;
     private ToOne<FoxBinUser> user;
 

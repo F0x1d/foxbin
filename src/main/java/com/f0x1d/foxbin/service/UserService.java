@@ -8,6 +8,7 @@ import com.f0x1d.foxbin.restcontroller.user.exceptions.SomethingIsEmptyException
 import com.f0x1d.foxbin.restcontroller.user.exceptions.UsernameTakenException;
 import com.f0x1d.foxbin.utils.CryptUtils;
 import com.f0x1d.foxbin.utils.RandomStringGenerator;
+import io.objectbox.exception.UniqueViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +29,14 @@ public class UserService {
         if (foxBinUser != null)
             throw new UsernameTakenException();
 
-        AccessToken accessToken = new AccessToken(generateToken());
-        mUserRepository.createFoxBinUser(username, password, accessToken);
+        FoxBinUser user;
+        try {
+            user = mUserRepository.createFoxBinUser(username, password);
+        } catch (Exception e) {
+            throw new UsernameTakenException();
+        }
 
-        return accessToken;
+        return addTokenToUser(user);
     }
 
     public AccessToken login(String username, String password) {
@@ -42,18 +47,22 @@ public class UserService {
         if (foxBinUser == null || !foxBinUser.getPassword().equals(CryptUtils.toMd5(password)) || username.equals("root"))
             throw new InvalidLoginOrPasswordException();
 
-        AccessToken accessToken = new AccessToken(generateToken());
-        mUserRepository.addAccessToken(foxBinUser, accessToken);
+        return addTokenToUser(foxBinUser);
+    }
 
-        return accessToken;
+    private AccessToken addTokenToUser(FoxBinUser user) {
+        try {
+            AccessToken accessToken = new AccessToken(generateToken());
+            mUserRepository.addAccessToken(user, accessToken);
+
+            return accessToken;
+        } catch (UniqueViolationException e) {
+            return addTokenToUser(user);
+        }
     }
 
     private String generateToken() {
-        String token = mRandomStringGenerator.nextToken();
-        while (mUserRepository.tokenExists(token))
-            token = mRandomStringGenerator.nextToken();
-
-        return token;
+        return mRandomStringGenerator.nextToken();
     }
 
     private boolean checkRequestBody(String username, String password) {

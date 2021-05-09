@@ -6,10 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-
-import java.util.concurrent.Executors;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 public class FoxbinApplication {
 
 	@Autowired
@@ -22,20 +22,5 @@ public class FoxbinApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	public void createRootUser() {
 		mUserRepository.createRootUser();
-	}
-
-	@EventListener(ApplicationReadyEvent.class)
-	public void startTokensChecker() {
-		Executors.newSingleThreadExecutor().execute(() -> {
-			while (true) {
-				mUserRepository.checkTokens();
-
-				try {
-					Thread.sleep(Constants.HALF_DAY_MS);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 }

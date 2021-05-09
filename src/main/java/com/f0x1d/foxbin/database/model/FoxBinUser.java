@@ -24,15 +24,6 @@ public class FoxBinUser {
     @Backlink(to = "user")
     private ToMany<AccessToken> accessTokens;
 
-    public static FoxBinUser create(String username, String password, AccessToken accessToken) {
-        FoxBinUser foxBinUser = new FoxBinUser();
-        foxBinUser.setUsername(username);
-        foxBinUser.setPassword(password);
-        foxBinUser.getAccessTokens().add(accessToken);
-
-        return foxBinUser;
-    }
-
     public static FoxBinUser create(String username, String password) {
         FoxBinUser foxBinUser = new FoxBinUser();
         foxBinUser.setUsername(username);
