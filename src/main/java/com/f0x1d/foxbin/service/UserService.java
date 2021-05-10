@@ -25,10 +25,6 @@ public class UserService {
         if (checkRequestBody(username, password))
             throw new SomethingIsEmptyException();
 
-        FoxBinUser foxBinUser = mUserRepository.foxBinUserByUsername(username);
-        if (foxBinUser != null)
-            throw new UsernameTakenException();
-
         FoxBinUser user;
         try {
             user = mUserRepository.createFoxBinUser(username, password);
