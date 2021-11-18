@@ -3,6 +3,7 @@ package com.f0x1d.foxbin.restcontroller.note;
 import com.f0x1d.foxbin.model.requestbody.CreateOrEditNoteRequestBody;
 import com.f0x1d.foxbin.model.response.base.Response;
 import com.f0x1d.foxbin.model.response.note.CreatedOrEditedNoteResponse;
+import com.f0x1d.foxbin.model.response.note.DeletedNoteResponse;
 import com.f0x1d.foxbin.model.response.note.UserNoteResponse;
 import com.f0x1d.foxbin.model.response.note.UserNotesResponse;
 import com.f0x1d.foxbin.service.NoteService;
@@ -31,6 +32,12 @@ public class NoteRestController {
                 createOrEditNoteRequestBody.getSlug(),
                 createOrEditNoteRequestBody.getAccessToken()
         ));
+    }
+
+    @GetMapping("/delete/{slug}")
+    public Response deleteNote(@PathVariable String slug, @RequestParam(value = "accessToken") String accessToken) {
+        mNoteService.deleteNote(slug, accessToken);
+        return new DeletedNoteResponse();
     }
 
     @GetMapping("/getAll")

@@ -60,6 +60,16 @@ public class NoteService {
         return slug;
     }
 
+    public void deleteNote(String slug, String accessToken) {
+        FoxBinNote foxBinNote = noteFromSlug(slug);
+        FoxBinUser foxBinUser = userFromAccessToken(accessToken);
+
+        if (foxBinUser == null || !foxBinNote.getUser().getTarget().equals(foxBinUser))
+            throw new UneditableNoteException();
+
+        mNoteRepository.deleteNote(foxBinNote);
+    }
+
     public String editNote(String content, String slug, String accessToken) {
         if (content.isEmpty())
             throw new EmptyContentException();

@@ -22,6 +22,12 @@ public class NoteRepository {
                 ));
     }
 
+    public void deleteNote(FoxBinNote foxBinNote) {
+        ObjectBox.get()
+                .boxFor(FoxBinNote.class)
+                .remove(foxBinNote);
+    }
+
     public void editNote(String content, FoxBinNote foxBinNote) {
         foxBinNote.setContent(content);
 
