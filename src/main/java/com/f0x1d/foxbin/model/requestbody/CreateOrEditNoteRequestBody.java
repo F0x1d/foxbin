@@ -4,6 +4,7 @@ public class CreateOrEditNoteRequestBody {
 
     private String content;
     private String slug;
+    private long deleteAfter = 0;
 
     private String accessToken;
 
@@ -21,6 +22,14 @@ public class CreateOrEditNoteRequestBody {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public long getDeleteAfter() {
+        return deleteAfter;
+    }
+
+    public void setDeleteAfter(long deleteAfter) {
+        this.deleteAfter = deleteAfter;
     }
 
     public String getAccessToken() {

@@ -40,7 +40,7 @@
     },
     {
       "id": "2:1024651127579409836",
-      "lastPropertyId": "5:8037546159317555646",
+      "lastPropertyId": "6:9076332573691991571",
       "name": "FoxBinNote",
       "properties": [
         {
@@ -71,6 +71,12 @@
           "type": 11,
           "flags": 1548,
           "relationTarget": "FoxBinUser"
+        },
+        {
+          "id": "6:9076332573691991571",
+          "name": "deleteAfter",
+          "type": 6,
+          "flags": 4
         }
       ],
       "relations": []

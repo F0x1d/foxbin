@@ -21,6 +21,7 @@ public class NoteRestController {
         return new CreatedOrEditedNoteResponse(mNoteService.createNote(
                 createOrEditNoteRequestBody.getContent(),
                 createOrEditNoteRequestBody.getSlug(),
+                createOrEditNoteRequestBody.getDeleteAfter(),
                 createOrEditNoteRequestBody.getAccessToken()
         ));
     }

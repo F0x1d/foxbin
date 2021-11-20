@@ -48,14 +48,14 @@ public class NoteService {
         );
     }
 
-    public String createNote(String content, String slug, String accessToken) {
+    public String createNote(String content, String slug, long deleteAfter, String accessToken) {
         if (content.isEmpty() || (slug != null && slug.isEmpty()))
             throw new EmptyContentException();
 
         FoxBinUser user = userFromAccessToken(accessToken);
 
         slug = generateSlug(slug);
-        mNoteRepository.createNote(content, slug, user);
+        mNoteRepository.createNote(content, slug, deleteAfter, user);
 
         return slug;
     }

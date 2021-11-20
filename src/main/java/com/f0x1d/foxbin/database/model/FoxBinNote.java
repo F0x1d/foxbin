@@ -16,14 +16,16 @@ public class FoxBinNote {
     private String slug;
     private String content;
     private Date date;
+    private long deleteAfter;
 
     private ToOne<FoxBinUser> user;
 
-    public static FoxBinNote createNote(String content, String slug, FoxBinUser foxBinUser) {
+    public static FoxBinNote createNote(String content, String slug, long deleteAfter, FoxBinUser foxBinUser) {
         FoxBinNote foxBinNote = new FoxBinNote();
         foxBinNote.setContent(content);
         foxBinNote.setSlug(slug);
         foxBinNote.setDate(new Date());
+        foxBinNote.setDeleteAfter(deleteAfter);
         if (foxBinUser != null) foxBinNote.user.setTarget(foxBinUser);
 
         return foxBinNote;
@@ -78,6 +80,14 @@ public class FoxBinNote {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public long getDeleteAfter() {
+        return deleteAfter;
+    }
+
+    public void setDeleteAfter(long deleteAfter) {
+        this.deleteAfter = deleteAfter;
     }
 
     public ToOne<FoxBinUser> getUser() {
