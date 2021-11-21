@@ -62,7 +62,7 @@ public class NoteRepository {
         } else return mRootUser;
     }
 
-    @Scheduled(initialDelay = Constants.ONE_MINUTE_MS, fixedRate = Constants.TEN_MINUTES_MS)
+    @Scheduled(initialDelay = Constants.ONE_MINUTE_MS, fixedRate = Constants.THREE_MINUTES_MS)
     public void checkExpiration() {
         Box<FoxBinNote> noteBox = ObjectBox.get().boxFor(FoxBinNote.class);
 
