@@ -7,6 +7,7 @@ import java.util.Base64;
 
 public class CryptUtils {
 
+    // xd
     public static String toMd5(String password) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");

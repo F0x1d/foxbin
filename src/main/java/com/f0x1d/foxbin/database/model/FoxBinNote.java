@@ -93,8 +93,4 @@ public class FoxBinNote {
     public ToOne<FoxBinUser> getUser() {
         return user;
     }
-
-    public void setUser(ToOne<FoxBinUser> user) {
-        this.user = user;
-    }
 }

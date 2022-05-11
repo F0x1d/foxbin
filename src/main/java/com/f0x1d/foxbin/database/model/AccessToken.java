@@ -52,10 +52,6 @@ public class AccessToken {
         return user;
     }
 
-    public void setUser(ToOne<FoxBinUser> user) {
-        this.user = user;
-    }
-
     public long getLastUsedAt() {
         return lastUsedAt;
     }

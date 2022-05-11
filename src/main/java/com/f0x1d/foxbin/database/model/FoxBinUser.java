@@ -69,16 +69,8 @@ public class FoxBinUser {
         return accessTokens;
     }
 
-    public void setAccessTokens(ToMany<AccessToken> accessTokens) {
-        this.accessTokens = accessTokens;
-    }
-
     public List<FoxBinNote> getNotes() {
         return notes;
-    }
-
-    public void setNotes(ToMany<FoxBinNote> notes) {
-        this.notes = notes;
     }
 
     @Override
@@ -91,6 +83,6 @@ public class FoxBinUser {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, notes, accessTokens);
+        return username.hashCode();
     }
 }

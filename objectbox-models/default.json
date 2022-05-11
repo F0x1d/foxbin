@@ -26,14 +26,13 @@
           "name": "userId",
           "indexId": "1:1913705812953297460",
           "type": 11,
-          "flags": 1548,
+          "flags": 520,
           "relationTarget": "FoxBinUser"
         },
         {
           "id": "4:496328135057121350",
           "name": "lastUsedAt",
-          "type": 6,
-          "flags": 4
+          "type": 6
         }
       ],
       "relations": []
@@ -69,14 +68,13 @@
           "name": "userId",
           "indexId": "2:1413074217106472388",
           "type": 11,
-          "flags": 1548,
+          "flags": 520,
           "relationTarget": "FoxBinUser"
         },
         {
           "id": "6:9076332573691991571",
           "name": "deleteAfter",
-          "type": 6,
-          "flags": 4
+          "type": 6
         }
       ],
       "relations": []

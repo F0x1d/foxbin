@@ -1,15 +1,16 @@
 package com.f0x1d.foxbin.repository;
 
 import com.f0x1d.foxbin.Constants;
-import com.f0x1d.foxbin.database.ObjectBox;
 import com.f0x1d.foxbin.database.model.AccessToken;
 import com.f0x1d.foxbin.database.model.AccessToken_;
 import com.f0x1d.foxbin.database.model.FoxBinUser;
 import com.f0x1d.foxbin.database.model.FoxBinUser_;
 import com.f0x1d.foxbin.restcontroller.user.exceptions.InvalidAuthorizationException;
 import com.f0x1d.foxbin.utils.CryptUtils;
+import com.f0x1d.foxbin.utils.DBUtils;
 import io.objectbox.Box;
 import io.objectbox.exception.UniqueViolationException;
+import io.objectbox.query.QueryBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
@@ -19,31 +20,28 @@ import java.util.List;
 public class UserRepository {
 
     public List<FoxBinUser> getAllUsers() {
-        return ObjectBox.get()
-                .boxFor(FoxBinUser.class)
-                .query()
-                .build()
-                .find();
+        return DBUtils.boxForUsers().getAll();
     }
 
     public FoxBinUser foxBinUserByUsername(String username) {
-        return ObjectBox.get()
-                .boxFor(FoxBinUser.class)
-                .query()
-                .equal(FoxBinUser_.username, username)
-                .build()
-                .findFirst();
+        return DBUtils.findFirst(
+                DBUtils
+                        .boxForUsers()
+                        .query()
+                        .equal(FoxBinUser_.username, username, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                        .build()
+        );
     }
 
     public FoxBinUser userFromAccessToken(String token) {
-        Box<AccessToken> accessTokenBox = ObjectBox.get()
-                .boxFor(AccessToken.class);
+        Box<AccessToken> accessTokenBox = DBUtils.boxForTokens();
 
-        AccessToken accessToken = accessTokenBox
-                .query()
-                .equal(AccessToken_.token, token)
-                .build()
-                .findFirst();
+        AccessToken accessToken = DBUtils.findFirst(
+                accessTokenBox
+                        .query()
+                        .equal(AccessToken_.token, token, QueryBuilder.StringOrder.CASE_SENSITIVE)
+                        .build()
+        );
 
         if (accessToken == null)
             throw new InvalidAuthorizationException();
@@ -55,35 +53,35 @@ public class UserRepository {
     public void addAccessToken(FoxBinUser foxBinUser, AccessToken accessToken) throws UniqueViolationException {
         foxBinUser.getAccessTokens().add(accessToken);
 
-        ObjectBox.get()
-                .boxFor(FoxBinUser.class)
+        DBUtils
+                .boxForUsers()
                 .put(foxBinUser);
     }
 
     public void removeAccessToken(AccessToken accessToken) {
-        ObjectBox.get()
-                .boxFor(AccessToken.class)
+        DBUtils
+                .boxForTokens()
                 .remove(accessToken);
     }
 
     public FoxBinUser createFoxBinUser(String username, String password) throws UniqueViolationException {
         FoxBinUser foxBinUser = FoxBinUser.create(username, CryptUtils.toMd5(password));
 
-        ObjectBox.get()
-                .boxFor(FoxBinUser.class)
+        DBUtils
+                .boxForUsers()
                 .put(foxBinUser);
 
         return foxBinUser;
     }
 
     public void createRootUser() {
-        Box<FoxBinUser> foxBinUserBox = ObjectBox.get().boxFor(FoxBinUser.class);
-        if (foxBinUserBox
-                .query()
-                .equal(FoxBinUser_.username, "root")
-                .build()
-                .findFirst() != null
-        ) return;
+        Box<FoxBinUser> foxBinUserBox = DBUtils.boxForUsers();
+        if (DBUtils.findFirst(
+                foxBinUserBox
+                        .query()
+                        .equal(FoxBinUser_.username, "root", QueryBuilder.StringOrder.CASE_SENSITIVE)
+                        .build()
+        ) != null) return;
 
         foxBinUserBox.put(FoxBinUser.create("root", "root"));
     }

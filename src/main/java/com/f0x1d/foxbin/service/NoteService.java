@@ -6,6 +6,7 @@ import com.f0x1d.foxbin.model.response.note.usernote.UserNoteWithContent;
 import com.f0x1d.foxbin.repository.NoteRepository;
 import com.f0x1d.foxbin.repository.UserRepository;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.*;
+import com.f0x1d.foxbin.utils.DBUtils;
 import com.f0x1d.foxbin.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,15 @@ public class NoteService {
     private final Pattern mSlugPattern = Pattern.compile("[a-zA-Z0-9]{5,64}");
 
     public List<FoxBinNote> userNotes(String accessToken) {
-        return mUserRepository.userFromAccessToken(accessToken).getNotes();
+        List<FoxBinNote> notes = mUserRepository.userFromAccessToken(accessToken).getNotes();
+        DBUtils.closeThreadResources();
+        return notes;
     }
 
     public String getRawNote(String slug) {
-        return noteFromSlug(slug).getContent();
+        String content = noteFromSlug(slug).getContent();
+        DBUtils.closeThreadResources();
+        return content;
     }
 
     public UserNoteWithContent getNote(String slug, String accessToken) {
@@ -40,12 +45,15 @@ public class NoteService {
 
         boolean editable = foxBinUser != null && foxBinNote.getUser().getTarget().equals(foxBinUser);
 
-        return UserNoteWithContent.create(
+        UserNoteWithContent userNoteWithContent = UserNoteWithContent.create(
                 foxBinNote.getContent(),
                 foxBinNote.getSlug(),
                 foxBinNote.getDate(),
                 editable
         );
+
+        DBUtils.closeThreadResources();
+        return userNoteWithContent;
     }
 
     public String createNote(String content, String slug, long deleteAfter, String accessToken) {
@@ -57,6 +65,7 @@ public class NoteService {
         slug = generateSlug(slug);
         mNoteRepository.createNote(content, slug, deleteAfter, user);
 
+        DBUtils.closeThreadResources();
         return slug;
     }
 
@@ -68,6 +77,7 @@ public class NoteService {
             throw new UneditableNoteException();
 
         mNoteRepository.deleteNote(foxBinNote);
+        DBUtils.closeThreadResources();
     }
 
     public String editNote(String content, String slug, String accessToken) {
@@ -82,6 +92,7 @@ public class NoteService {
 
         mNoteRepository.editNote(content, foxBinNote);
 
+        DBUtils.closeThreadResources();
         return slug;
     }
 
