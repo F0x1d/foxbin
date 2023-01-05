@@ -17,7 +17,10 @@ public class CreateOrEditNoteRequestBody {
     }
 
     public String getSlug() {
-        return slug;
+        if (slug != null)
+            return slug.isEmpty() ? null : slug;
+        else
+            return null;
     }
 
     public void setSlug(String slug) {

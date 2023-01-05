@@ -11,11 +11,13 @@ public class CryptUtils {
     public static String toMd5(String password) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            return Base64.getEncoder()
+            return Base64
+                    .getEncoder()
                     .encodeToString(
                             messageDigest.digest(
-                                    password.getBytes(StandardCharsets.UTF_8)));
-
+                                    password.getBytes(StandardCharsets.UTF_8)
+                            )
+                    );
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return null;

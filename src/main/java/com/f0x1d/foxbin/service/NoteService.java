@@ -1,29 +1,20 @@
 package com.f0x1d.foxbin.service;
 
+import com.f0x1d.foxbin.database.ObjectBox;
 import com.f0x1d.foxbin.database.model.FoxBinNote;
 import com.f0x1d.foxbin.database.model.FoxBinUser;
 import com.f0x1d.foxbin.model.response.note.usernote.UserNoteWithContent;
-import com.f0x1d.foxbin.repository.NoteRepository;
-import com.f0x1d.foxbin.repository.UserRepository;
 import com.f0x1d.foxbin.restcontroller.note.exceptions.*;
+import com.f0x1d.foxbin.restcontroller.user.exceptions.SomethingIsEmptyException;
+import com.f0x1d.foxbin.service.base.BaseService;
 import com.f0x1d.foxbin.utils.DBUtils;
-import com.f0x1d.foxbin.utils.RandomStringGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
-public class NoteService {
-
-    @Autowired
-    private NoteRepository mNoteRepository;
-    @Autowired
-    private UserRepository mUserRepository;
-
-    @Autowired
-    private RandomStringGenerator mRandomStringGenerator;
+public class NoteService extends BaseService {
 
     private final Pattern mSlugPattern = Pattern.compile("[a-zA-Z0-9]{5,64}");
 
@@ -33,13 +24,10 @@ public class NoteService {
         return notes;
     }
 
-    public String getRawNote(String slug) {
-        String content = noteFromSlug(slug).getContent();
-        DBUtils.closeThreadResources();
-        return content;
-    }
-
     public UserNoteWithContent getNote(String slug, String accessToken) {
+        if (slug.isEmpty())
+            throw new SomethingIsEmptyException();
+
         FoxBinNote foxBinNote = noteFromSlug(slug);
         FoxBinUser foxBinUser = userFromAccessToken(accessToken);
 
@@ -57,19 +45,26 @@ public class NoteService {
     }
 
     public String createNote(String content, String slug, long deleteAfter, String accessToken) {
-        if (content.isEmpty() || (slug != null && slug.isEmpty()))
+        if (anyEmpty(content))
             throw new EmptyContentException();
 
         FoxBinUser user = userFromAccessToken(accessToken);
 
-        slug = generateSlug(slug);
-        mNoteRepository.createNote(content, slug, deleteAfter, user);
+        String resultSlug = ObjectBox.get().callInTxNoException(() -> {
+            String finalSlug = generateSlug(slug);
+            mNoteRepository.createNote(content, finalSlug, deleteAfter, user);
+
+            return finalSlug;
+        });
 
         DBUtils.closeThreadResources();
-        return slug;
+        return resultSlug;
     }
 
     public void deleteNote(String slug, String accessToken) {
+        if (anyEmpty(slug, accessToken))
+            throw new SomethingIsEmptyException();
+
         FoxBinNote foxBinNote = noteFromSlug(slug);
         FoxBinUser foxBinUser = userFromAccessToken(accessToken);
 
@@ -81,8 +76,8 @@ public class NoteService {
     }
 
     public String editNote(String content, String slug, String accessToken) {
-        if (content.isEmpty())
-            throw new EmptyContentException();
+        if (anyEmpty(content, slug, accessToken))
+            throw new SomethingIsEmptyException();
 
         FoxBinNote foxBinNote = noteFromSlug(slug);
         FoxBinUser foxBinUser = userFromAccessToken(accessToken);
@@ -90,7 +85,7 @@ public class NoteService {
         if (foxBinUser == null || !foxBinNote.getUser().getTarget().equals(foxBinUser))
             throw new UneditableNoteException();
 
-        mNoteRepository.editNote(content, foxBinNote);
+        ObjectBox.get().runInTx(() -> mNoteRepository.editNote(content, foxBinNote));
 
         DBUtils.closeThreadResources();
         return slug;
