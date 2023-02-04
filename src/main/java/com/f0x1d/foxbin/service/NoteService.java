@@ -108,7 +108,7 @@ public class NoteService extends BaseService {
     }
 
     private String generateSlug(String slug) {
-        if (slug != null) {
+        if (slug != null && !slug.isEmpty()) {
             if (mNoteRepository.noteFromSlug(slug) == null) {
                 if (mSlugPattern.matcher(slug).matches())
                     return slug;
